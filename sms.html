@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Odeslat SMS</title>
+<style>
+body{font-family:Arial,Helvetica,sans-serif;max-width:480px;margin:32px auto;padding:0 16px;color:#0f172a}
+h2{margin:0 0 8px}
+textarea{width:100%;height:140px;margin:12px 0;font-size:15px;padding:8px;box-sizing:border-box}
+.b{display:inline-block;background:#16a34a;color:#fff;padding:14px 20px;border-radius:8px;text-decoration:none;font-weight:bold;border:0;font-size:15px;cursor:pointer}
+.s{background:#334155}
+p.n{color:#64748b;font-size:13px}
+</style></head><body>
+<h2>Odeslat SMS</h2>
+<div id="to"></div>
+<textarea id="msg" readonly></textarea>
+<p><a class="b" id="go" href="#">Otevřít SMS</a> <button class="b s" id="cp" type="button">Kopírovat text</button></p>
+<p class="n" id="note">Pokud se SMS neotevřela sama, klikni na „Otevřít SMS“. Na počítači zkopíruj text a pošli ho z telefonu.</p>
+<script>
+var q = new URLSearchParams(location.search);
+var to = (q.get('to') || '').replace(/[^+\d]/g, '');
+var body = q.get('body') || '';
+document.getElementById('to').textContent = 'Číslo: ' + to;
+document.getElementById('msg').value = body;
+var link = 'sms:' + to + '?&body=' + encodeURIComponent(body);
+document.getElementById('go').href = link;
+document.getElementById('cp').onclick = function () {
+  var t = document.getElementById('msg');
+  if (navigator.clipboard) navigator.clipboard.writeText(body); else { t.select(); document.execCommand('copy'); }
+  this.textContent = 'Zkopírováno ✓';
+};
+if (to) setTimeout(function () { location.href = link; }, 300);
+</script></body></html>
